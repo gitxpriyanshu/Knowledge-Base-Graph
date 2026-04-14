@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Knowledge Base Graph
 
-## Getting Started
+An interactive, responsive knowledge mapping tool designed for topics and relationships. This project was built as a browser-coded frontend application to demonstrate graph-to-UI data management and persistence.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 1. Interactive Graph Visualization
+- **Graph Library**: Built with `Cytoscape.js` and `Dagre` layout engine. 
+- **Non-Overlapping Layout**: Uses a hierarchical layout (Left-to-Right or Top-to-Bottom) to ensure nodes are readable on initial load.
+- **Node Dragging**: Reposition nodes via drag-and-drop; coordinates persist automatically.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Full CRUD Support
+- **Node Management**: Add nodes with custom titles and detailed metadata/notes.
+- **Relationship Forging**: A dedicated "Link Forge" interface to establish directed relationships between any two nodes with custom labels.
+- **Inline Editing**: Selected nodes open a Detail Panel (Sidebar) where titles and notes can be edited in real-time.
+- **Full Deletion**: Capability to delete specific nodes (auto-cleaning orphaned edges) or individual edges.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. State & Persistence
+- **LocalStorage Storage**: Full graph state (nodes, edges, positions) survives page refreshes.
+- **Seed Data Integration**: Pre-populated on first load using the research topics provided in the assignment spec (React, Next.js, TypeScript, etc.).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Advanced UX (Stretch Goals)
+- **High-End UI**: Cyber-inspired dark mode using glassmorphism and Tailwind CSS.
+- **Connectivity Pulse**: Toggle data-flow animations along relationship paths.
+- **Selection Isolation**: Clicking a node highlights its direct neighbors and dims the rest of the network for focus.
+- **Real-time Radar**: A tactical overview widget tracking node distribution in the graph space.
 
-## Learn More
+## 🛠️ Tech Stack
+- **Framework**: Next.js 14 (App Router), TypeScript.
+- **Styling**: Tailwind CSS, Framer Motion (Animations).
+- **Store**: Zustand (with Persist middleware).
+- **Core Library**: Cytoscape.js with Dagre layout plugin.
+- **Component Library**: Shadcn UI / Radix Primitives.
 
-To learn more about Next.js, take a look at the following resources:
+## 🏁 Setup & Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Installation**:
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Development Mode**:
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+3. **Build & Optimize**:
+   ```bash
+   npm run build
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Access**:
+   Open [http://localhost:3000](http://localhost:3000) (or 3001) in your browser.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Assignment Verification
+| Feature | Status | Note |
+|---|---|---|
+| Render Nodes & Edges | ✅ PASS | Cytoscape implementation |
+| Relationship Labels | ✅ PASS | Visible on all edges |
+| Layout (No overlap) | ✅ PASS | Hierarchical Dagre layout |
+| Detail Panel (Edit) | ✅ PASS | Inline title/note editing |
+| CRUD Nodes | ✅ PASS | Create/Update/Delete active |
+| CRUD Edges | ✅ PASS | Forge/Delete active |
+| LocalStorage | ✅ PASS | Zustand persistence |
+| Highlight Connected | ✅ PASS | Automatic on node selection |
+
+---
+*Developed as a high-performance frontend assignment demo.*

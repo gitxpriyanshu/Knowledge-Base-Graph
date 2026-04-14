@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263.4 70% 50.4%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Futuristic dark grid background */
+    background-color: #0B0F1A;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.04) 0%, transparent 55%),
+      linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Radar sweep animation */
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.radar-sweep {
+  animation: radar-sweep 3s linear infinite;
+  transform-origin: bottom left;
+}
+
+@keyframes edge-pulse {
+  0% { stroke-width: 2; opacity: 0.6; filter: drop-shadow(0 0 2px #00f0ff); }
+  50% { stroke-width: 4; opacity: 1; filter: drop-shadow(0 0 8px #00f0ff); }
+  100% { stroke-width: 2; opacity: 0.6; filter: drop-shadow(0 0 2px #00f0ff); }
+}
+.pulsing-effect {
+  animation: edge-pulse 2s ease-in-out infinite;
+}
