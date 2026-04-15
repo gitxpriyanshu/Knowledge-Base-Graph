@@ -29,7 +29,7 @@ export function NodeDetailPanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed right-6 top-24 bottom-6 w-[340px] z-50 flex flex-col"
+          className="fixed right-0 md:right-6 top-24 bottom-0 md:bottom-6 w-full md:w-[340px] z-50 flex flex-col px-4 md:px-0"
         >
           {/* Glassmorphism Panel */}
           <Card className="flex-1 flex flex-col bg-[#0F172A]/80 backdrop-blur-xl border border-[#00f0ff]/30 shadow-[0_0_40px_rgba(0,240,255,0.1)] rounded-2xl overflow-hidden m-0 relative">

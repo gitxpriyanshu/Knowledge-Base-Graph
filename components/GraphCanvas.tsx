@@ -28,7 +28,8 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
 
   useEffect(() => {
     if (cyRef.current) {
-        const layout = cyRef.current.layout({
+        const cy = cyRef.current;
+        const layout = cy.layout({
             name: 'dagre',
             rankDir: layoutDirection,
             padding: 50,
@@ -36,6 +37,14 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
             nodeDimensionsIncludeLabels: true,
         } as cytoscape.LayoutOptions);
         layout.run();
+
+        // Responsive Viewport recalibration
+        const handleResize = () => {
+          cy.resize();
+          cy.fit(undefined, 50);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }
   }, [nodes.length, edges.length, layoutDirection]);
   
