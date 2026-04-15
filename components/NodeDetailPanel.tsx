@@ -104,6 +104,24 @@ export function NodeDetailPanel() {
                     </div>
                 </div>
                 
+                {/* Node Branding (Color Picker) */}
+                <div className="space-y-3">
+                    <Label className="text-[#00f0ff] text-xs uppercase font-bold tracking-[0.1em] flex items-center gap-1">
+                        <Activity className="w-3 h-3" /> Node Branding
+                    </Label>
+                    <div className="flex flex-wrap gap-3 p-3 bg-[#0B0F1A] rounded-xl border border-slate-800/50">
+                        {['#00f0ff', '#a78bfa', '#3b82f6', '#4ade80', '#f472b6', '#fb923c', '#ffffff'].map(c => (
+                            <button
+                                key={c}
+                                onClick={() => useGraphStore.getState().updateNodeColor(selectedNode.id, c)}
+                                className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 shadow-lg ${selectedNode.color === c ? 'border-white scale-110 shadow-white/20' : 'border-transparent'}`}
+                                style={{ backgroundColor: c, boxShadow: `0 0 10px ${c}44` }}
+                                title={c}
+                            />
+                        ))}
+                    </div>
+                </div>
+                
                 <div className="pt-2">
                    <div className="text-[10px] text-slate-500 font-mono break-all bg-[#0B0F1A] p-3 rounded-lg border border-slate-800/50 flex align-center justify-between">
                      <span>SYS.ID</span>

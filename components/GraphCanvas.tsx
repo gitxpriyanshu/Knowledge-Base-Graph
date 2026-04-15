@@ -93,7 +93,7 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
   }, [pulsing, edges.length]);
 
   const elements = [
-    ...nodes.map(n => ({ data: { ...n, label: n.title }, position: n.position })),
+    ...nodes.map(n => ({ data: { id: n.id, label: n.title, color: n.color || '#3b82f6' } })),
     ...edges.map(e => ({ data: { id: e.id, source: e.source, target: e.target, label: e.label } }))
   ];
 
@@ -109,7 +109,7 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
         'text-halign': 'center',
         'text-wrap': 'wrap',
         'text-max-width': '120px',
-        'border-color': '#3b82f6',
+        'border-color': 'data(color)',
         'border-width': 2,
         'width': '140px',
         'height': '45px',
@@ -117,7 +117,7 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
         'font-family': 'Inter, sans-serif',
         'font-size': '12px',
         'shadow-blur': 25,
-        'shadow-color': '#3b82f6',
+        'shadow-color': 'data(color)',
         'shadow-opacity': 0.6,
         'transition-property': 'background-color, border-color, shadow-color, opacity, border-width, shadow-blur',
         'transition-duration': 400
@@ -158,8 +158,6 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
     {
        selector: 'node.highlighted',
        style: {
-         'border-color': '#00f0ff',
-         'shadow-color': '#00f0ff',
          'shadow-opacity': 1,
          'shadow-blur': 35,
          'border-width': 3,

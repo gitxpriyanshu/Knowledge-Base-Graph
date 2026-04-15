@@ -10,6 +10,7 @@ interface GraphState {
   initGraph: () => void;
   addNode: (title: string, note: string) => void;
   updateNode: (id: string, title: string, note: string) => void;
+  updateNodeColor: (id: string, color: string) => void;
   deleteNode: (id: string) => void;
   addEdge: (source: string, target: string, label: string) => void;
   deleteEdge: (id: string) => void;
@@ -31,6 +32,14 @@ export const useGraphStore = create<GraphState>((set) => ({
   selectedNodeId: null,
   searchQuery: '',
 
+  updateNodeColor: (id: string, color: string) => {
+    set((state) => {
+      const newNodes = state.nodes.map(n => n.id === id ? { ...n, color } : n);
+      saveToLocalStorage(newNodes, state.edges);
+      return { nodes: newNodes };
+    });
+  },
+
   initGraph: () => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('knowledge-graph');
@@ -47,7 +56,12 @@ export const useGraphStore = create<GraphState>((set) => ({
       }
     }
     
-    set({ nodes: seedNodes, edges: seedEdges });
+    const NODE_COLORS = ['#00f0ff', '#a78bfa', '#3b82f6', '#4ade80', '#f472b6', '#fb923c'];
+    
+    set({ 
+      nodes: seedNodes.map((n, i) => ({ ...n, color: n.color || NODE_COLORS[i % NODE_COLORS.length] })), 
+      edges: seedEdges 
+    });
     saveToLocalStorage(seedNodes, seedEdges);
   },
 
@@ -59,7 +73,8 @@ export const useGraphStore = create<GraphState>((set) => ({
       position: {
         x: Math.floor(Math.random() * 501) + 100,
         y: Math.floor(Math.random() * 301) + 100,
-      }
+      },
+      color: ['#00f0ff', '#a78bfa', '#3b82f6', '#4ade80', '#f472b6', '#fb923c'][Math.floor(Math.random() * 6)]
     };
     set((state) => {
       const newNodes = [...state.nodes, newNode];

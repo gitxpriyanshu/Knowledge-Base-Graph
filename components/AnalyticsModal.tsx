@@ -2,12 +2,15 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useGraphStore } from '@/store/useGraphStore';
-import { BarChart2, Network, Cpu, GitBranch, AlertCircle } from 'lucide-react';
+import { BarChart2, Network, Cpu, GitBranch, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 export function AnalyticsModal({ isOpen, onClose }: Props) {
   const { nodes, edges } = useGraphStore();
+  const [expandedNodeId, setExpandedNodeId] = useState<string | null>(null);
 
   // Compute stats
   const connectionCount: Record<string, number> = {};
@@ -76,13 +79,67 @@ export function AnalyticsModal({ isOpen, onClose }: Props) {
           </div>
         )}
 
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {nodes.sort((a, b) => (connectionCount[b.id] || 0) - (connectionCount[a.id] || 0)).slice(0, 6).map(n => (
-            <div key={n.id} className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-800">
-              <span className="text-sm text-slate-300 truncate">{n.title}</span>
-              <span className="text-xs text-[#00f0ff] font-mono ml-2">{connectionCount[n.id] || 0}</span>
-            </div>
-          ))}
+        <div className="mt-4">
+          <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 px-1">Network Intelligence (Click to Expand)</p>
+          <div className="flex flex-col gap-2 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
+            {nodes.sort((a, b) => (connectionCount[b.id] || 0) - (connectionCount[a.id] || 0)).map(n => {
+              const isExpanded = expandedNodeId === n.id;
+              const nodeEdges = edges.filter(e => e.source === n.id || e.target === n.id);
+              
+              return (
+                <div key={n.id} className="flex flex-col">
+                  <button 
+                    onClick={() => setExpandedNodeId(isExpanded ? null : n.id)}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all ${
+                        isExpanded ? 'bg-[#00f0ff]/10 border-[#00f0ff]/40 shadow-[0_0_15px_rgba(0,240,255,0.1)]' : 'bg-slate-900/50 border-slate-800 hover:border-[#00f0ff]/30'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: n.color || '#3b82f6', boxShadow: `0 0 8px ${n.color || '#3b82f6'}88` }} />
+                      <span className={`text-sm font-medium ${isExpanded ? 'text-[#00f0ff]' : 'text-slate-300'}`}>{n.title}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                       <span className={`text-xs font-mono p-1 px-2 rounded-md ${isExpanded ? 'bg-[#00f0ff]/20 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                        {connectionCount[n.id] || 0}
+                       </span>
+                       {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-[#00f0ff]" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-600" />}
+                    </div>
+                  </button>
+
+                  <AnimatePresence>
+                    {isExpanded && nodeEdges.length > 0 && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden bg-slate-950/40 rounded-b-lg border-x border-b border-[#00f0ff]/20 mx-1"
+                      >
+                        <div className="p-2 space-y-1">
+                          {nodeEdges.map(edge => {
+                            const isSource = edge.source === n.id;
+                            const neighborId = isSource ? edge.target : edge.source;
+                            const neighbor = nodes.find(nb => nb.id === neighborId);
+                            return (
+                              <div key={edge.id} className="flex items-center justify-between px-2 py-1.5 rounded bg-slate-800/20 hover:bg-slate-800/40 transition-colors">
+                                <div className="flex items-center gap-2">
+                                  <div className={`w-1.5 h-1.5 rounded-full ${isSource ? 'bg-[#00f0ff]' : 'bg-[#a78bfa]'}`} />
+                                  <span className="text-[11px] text-slate-400 italic">
+                                    {isSource ? 'connects to' : 'linked by'} <span className="text-slate-500 font-bold not-italic">{edge.label}</span>
+                                  </span>
+                                </div>
+                                <span className="text-xs text-white font-medium">{neighbor?.title}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
