@@ -31,7 +31,7 @@ interface Props {
 }
 
 export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange, pulsing, onTogglePulse }: Props) {
-  const { initGraph, nodes, edges } = useGraphStore();
+  const { initGraph, nodes, edges, searchQuery, setSearchQuery } = useGraphStore();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -110,8 +110,8 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#00f0ff] transition-colors" />
             <Input
               placeholder="Search nodes..."
-              value={useGraphStore(state => state.searchQuery)}
-              onChange={(e) => useGraphStore.getState().setSearchQuery(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 bg-[#0F172A]/80 border-[#3b82f6]/20 text-slate-200 placeholder:text-slate-600 focus-visible:ring-[#00f0ff]/40 focus-visible:border-[#00f0ff]/60 h-10 rounded-xl shadow-inner transition-all"
             />
           </div>
@@ -179,8 +179,8 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#00f0ff]" />
                 <Input
                   placeholder="Search neurons..."
-                  value={useGraphStore(state => state.searchQuery)}
-                  onChange={(e) => useGraphStore.getState().setSearchQuery(e.target.value)}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 bg-[#0F172A] border-slate-800 focus:border-[#00f0ff]/50 rounded-xl"
                 />
               </div>

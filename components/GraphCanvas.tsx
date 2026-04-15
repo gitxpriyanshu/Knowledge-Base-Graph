@@ -64,7 +64,7 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
       cy.elements().addClass('dimmed');
       
       const matchedNodes = cy.nodes().filter(node => 
-        node.data('title').toLowerCase().includes(query)
+        (node.data('label') || '').toLowerCase().includes(query)
       );
       
       matchedNodes.removeClass('dimmed').addClass('highlighted');
