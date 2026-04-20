@@ -128,10 +128,10 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
         <div className="hidden lg:flex items-center gap-6 shrink-0 relative z-10 h-full">
           <div className="flex items-center gap-2 border-r border-[#3b82f6]/20 pr-6 h-full">
             <Button variant="outline" onClick={onAddNode} className="border-[#3b82f6]/30 bg-[#3b82f6]/10 hover:bg-[#3b82f6]/20 text-blue-100 hover:text-white transition-all shadow-[0_0_10px_rgba(59,130,246,0.1)] rounded-lg h-9">
-              <Plus className="w-4 h-4 mr-2 text-[#00f0ff]" /> + Node
+              <Plus className="w-4 h-4 mr-2 text-[#00f0ff]" /> Node
             </Button>
             <Button variant="outline" onClick={onAddEdge} className="border-[#a78bfa]/30 bg-[#a78bfa]/10 hover:bg-[#a78bfa]/20 text-purple-100 hover:text-white transition-all shadow-[0_0_10px_rgba(167,139,250,0.1)] rounded-lg h-9">
-              <Plus className="w-4 h-4 mr-2 text-[#a78bfa]" /> + Edge
+              <Plus className="w-4 h-4 mr-2 text-[#a78bfa]" /> Edge
             </Button>
           </div>
 
