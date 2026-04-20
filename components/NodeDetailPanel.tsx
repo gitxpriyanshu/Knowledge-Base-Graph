@@ -110,7 +110,11 @@ export function NodeDetailPanel() {
                         <Activity className="w-3 h-3" /> Node Branding
                     </Label>
                     <div className="flex flex-wrap gap-3 p-3 bg-[#0B0F1A] rounded-xl border border-slate-800/50">
-                        {['#00f0ff', '#a78bfa', '#3b82f6', '#4ade80', '#f472b6', '#fb923c', '#ffffff'].map(c => (
+                        {[
+                          '#00f0ff', '#a78bfa', '#3b82f6', '#4ade80', '#f472b6', 
+                          '#fb923c', '#facc15', '#ef4444', '#2dd4bf', '#6366f1', 
+                          '#94a3b8', '#ffffff'
+                        ].map(c => (
                             <button
                                 key={c}
                                 onClick={() => useGraphStore.getState().updateNodeColor(selectedNode.id, c)}

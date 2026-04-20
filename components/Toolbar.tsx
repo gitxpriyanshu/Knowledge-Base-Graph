@@ -20,6 +20,7 @@ import { useGraphStore } from '@/store/useGraphStore';
 import { AnalyticsModal } from '@/components/AnalyticsModal';
 import { HelpModal } from '@/components/HelpModal';
 import { SettingsModal } from '@/components/SettingsModal';
+import { toast } from 'sonner';
 
 interface Props {
   onAddNode: () => void;
@@ -37,10 +38,16 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
   const [helpOpen, setHelpOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   const handleReset = () => {
     localStorage.removeItem('knowledge-graph');
     initGraph();
+    setResetDialogOpen(false);
+    toast.success("Knowledge Matrix Reinitialized", {
+      description: "Baseline topology and cache have been purged successfully.",
+      duration: 3000,
+    });
   };
 
   // Export graph as downloadable JSON
@@ -85,8 +92,8 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
               <GitBranch className="w-4 h-4 md:w-5 md:h-5 text-[#00f0ff]" />
             </div>
             <div className="flex flex-col">
-              <h1 className="font-extrabold text-sm md:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider uppercase truncate max-w-[120px] md:max-w-none">
-                Knowledge Base
+              <h1 className="font-extrabold text-sm md:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider uppercase truncate max-w-[150px] md:max-w-none">
+                Knowledge Base Graphs
               </h1>
               <div className="flex items-center gap-2 text-[10px] text-[#a78bfa] font-mono tracking-widest uppercase">
                 <span>{nodes.length} NDE</span>
@@ -133,13 +140,29 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
             <Button variant="ghost" size="icon" title="Pulse" onClick={onTogglePulse} className={`rounded-lg w-9 h-9 ${pulsing ? 'bg-[#00f0ff]/20 text-[#00f0ff]' : 'hover:bg-[#00f0ff]/10 text-slate-400'}`}><Activity className="w-5 h-5" /></Button>
             <Button variant="ghost" size="icon" title="Export JSON" onClick={handleExport} className="rounded-lg hover:bg-[#00f0ff]/10 hover:text-[#00f0ff] w-9 h-9"><Download className="w-5 h-5" /></Button>
             <Button variant="ghost" size="icon" title="Settings" onClick={() => setSettingsOpen(true)} className="rounded-lg hover:bg-[#a78bfa]/10 hover:text-[#a78bfa] w-9 h-9"><Settings className="w-5 h-5" /></Button>
-            <Button variant="ghost" size="icon" title="Help" onClick={() => setSettingsOpen(true)} className="rounded-lg hover:bg-[#a78bfa]/10 hover:text-[#a78bfa] w-9 h-9"><HelpCircle className="w-5 h-5" /></Button>
+            <Button variant="ghost" size="icon" title="Help" onClick={() => setHelpOpen(true)} className="rounded-lg hover:bg-[#a78bfa]/10 hover:text-[#a78bfa] w-9 h-9"><HelpCircle className="w-5 h-5" /></Button>
 
-            <AlertDialog>
-              <AlertDialogTrigger className="ml-1 px-3 h-9 rounded-lg border border-red-900/50 bg-red-950/30 text-red-400 hover:bg-red-900/50 transition-all"><RotateCcw className="w-4 h-4" /></AlertDialogTrigger>
-              <AlertDialogContent className="bg-[#0B0F1A] border-[#3b82f6]/30 text-slate-100 shadow-[0_0_50px_rgba(0,240,255,0.1)] rounded-2xl">
-                <AlertDialogHeader><AlertDialogTitle>Reboot Matrix?</AlertDialogTitle><AlertDialogDescription>This purges cache and baseline topology. Proceed?</AlertDialogDescription></AlertDialogHeader>
-                <AlertDialogFooter><AlertDialogCancel className="bg-transparent text-slate-400">Abort</AlertDialogCancel><AlertDialogAction onClick={handleReset} className="bg-red-600 border-red-500">Execute Reboot</AlertDialogAction></AlertDialogFooter>
+            <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+              <AlertDialogTrigger 
+                render={
+                  <Button variant="ghost" size="icon" title="Reset Matrix" className="ml-1 rounded-lg border border-red-900/50 bg-red-950/30 text-red-400 hover:bg-red-900/50 transition-all w-9 h-9">
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                } 
+              />
+              <AlertDialogContent className="bg-[#0B0F1A] border-red-500/20 text-slate-100 shadow-[0_0_50px_rgba(255,0,0,0.1)] rounded-2xl z-[250]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-red-400">Reboot Matrix?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-slate-400">
+                    This will purge all local data and restore the baseline neural network. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-800">Abort</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white border-none">
+                    Execute Reboot
+                  </AlertDialogAction>
+                </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           </div>
@@ -201,7 +224,16 @@ export function Toolbar({ onAddNode, onAddEdge, layoutDirection, onLayoutChange,
               </div>
 
               <div className="pt-6 border-t border-slate-800">
-                <Button variant="destructive" onClick={handleReset} className="w-full bg-red-950/40 border border-red-500/30 text-red-100 hover:bg-red-600"><RotateCcw className="w-4 h-4 mr-3" /> Reboot Matrix</Button>
+                <Button 
+                  variant="destructive" 
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setResetDialogOpen(true);
+                  }} 
+                  className="w-full bg-red-950/40 border border-red-500/30 text-red-100 hover:bg-red-600"
+                >
+                  <RotateCcw className="w-4 h-4 mr-3" /> Reboot Matrix
+                </Button>
               </div>
             </motion.div>
           </>

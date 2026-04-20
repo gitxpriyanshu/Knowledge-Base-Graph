@@ -25,6 +25,7 @@ interface Props {
 export function GraphCanvas({ layoutDirection, pulsing }: Props) {
   const { nodes, edges, setSelectedNode, updateNodePosition, selectedNodeId } = useGraphStore();
   const cyRef = useRef<cytoscape.Core | null>(null);
+  const [viewport, setViewport] = React.useState({ zoom: 1, pan: { x: 0, y: 0 }, width: 0, height: 0 });
 
   useEffect(() => {
     if (cyRef.current) {
@@ -42,7 +43,17 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
         const handleResize = () => {
           cy.resize();
           cy.fit(undefined, 50);
+          setViewport(prev => ({ ...prev, width: cy.width(), height: cy.height() }));
         };
+
+        // Initial sync
+        setViewport({ 
+          zoom: cy.zoom(), 
+          pan: cy.pan(), 
+          width: cy.width(), 
+          height: cy.height() 
+        });
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }
@@ -227,26 +238,63 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
          
          {/* Sweeping Radar Scanner Line */}
          <div className="absolute w-1/2 h-1/2 top-0 right-0 origin-bottom-left bg-gradient-to-tr from-[#00f0ff]/30 via-[#00f0ff]/5 to-transparent animate-[spin_3s_linear_infinite]" style={{ borderRight: '2px solid #00f0ff' }}></div>
-         
-         {/* Dynamic Node Blips - Real-time Visualization of Knowledge Matrix */}
-         {nodes.map((node, i) => {
-           // Golden angle style distribution for organic radar feel
-           const angle = (i * 137.5) % 360; 
-           const radius = 15 + (i * 8) % 75; // Stay within radar circles
-           return (
-             <div 
-               key={node.id}
-               className={`absolute rounded-full blur-[0.5px] transition-all duration-1000 ${
-                 i % 3 === 0 ? 'w-1.5 h-1.5 bg-[#00f0ff] animate-pulse shadow-[0_0_8px_#00f0ff]' : 
-                 i % 3 === 1 ? 'w-2 h-2 bg-[#a78bfa] opacity-60' : 
-                 'w-1 h-1 bg-white opacity-40 shadow-[0_0_3px_#fff]'
-               }`}
-               style={{
-                 transform: `rotate(${angle}deg) translateY(-${radius}px)`,
-               }}
-             />
-           );
-         })}
+          {/* Neural Minimap Projections - Real-time Visualization of Knowledge Matrix */}
+          {(() => {
+            const positionedNodes = nodes.filter((n): n is typeof n & { position: { x: number; y: number } } => 
+              !!n.position && typeof n.position.x === 'number' && typeof n.position.y === 'number'
+            );
+            
+            if (positionedNodes.length === 0) return null;
+            
+            // Calculate current viewport center in graph coordinates
+            const centerX = (-viewport.pan.x + viewport.width / 2) / (viewport.zoom || 1);
+            const centerY = (-viewport.pan.y + viewport.height / 2) / (viewport.zoom || 1);
+            
+            // Radar internal scaling
+            const radarSize = 224;
+            const radarRadius = radarSize / 2;
+            
+            // How much of the graph world to show on the radar at zoom 1.0
+            // We'll scale this with the actual zoom for the "do the same" effect
+            const baseScale = 0.15; 
+
+            return positionedNodes.map((node) => {
+              // Calculate relative position to viewport center
+              const relX = (node.position.x - centerX);
+              const relY = (node.position.y - centerY);
+              
+              // Scale according to viewport zoom
+              let x = relX * viewport.zoom * baseScale;
+              let y = relY * viewport.zoom * baseScale;
+              
+              // Circular clipping logic for a true radar feel
+              const dist = Math.sqrt(x*x + y*y);
+              let opacity = 0.7;
+              
+              if (dist > radarRadius - 5) {
+                // Pin to edge if out of bounds
+                const angle = Math.atan2(y, x);
+                x = Math.cos(angle) * (radarRadius - 8);
+                y = Math.sin(angle) * (radarRadius - 8);
+                opacity = 0.3; // Dim out-of-range nodes
+              }
+              
+              const isSelected = node.id === selectedNodeId;
+
+              return (
+                <div 
+                  key={node.id}
+                  className={`absolute rounded-full transition-all duration-300 ${isSelected ? 'w-3 h-3 z-20 pulse' : 'w-1.5 h-1.5'}`}
+                  style={{
+                    backgroundColor: node.color || '#3b82f6',
+                    boxShadow: `0 0 ${isSelected ? '12px' : '6px'} ${node.color || '#3b82f6'}88`,
+                    transform: `translate(${x}px, ${y}px)`,
+                    opacity: isSelected ? 1 : opacity
+                  }}
+                />
+              );
+            });
+          })()}
       </div>
 
       <CytoscapeComponent
@@ -269,16 +317,38 @@ export function GraphCanvas({ layoutDirection, pulsing }: Props) {
               });
               
               cy.on('tap', (evt) => {
-                 if (evt.target === cy) {
-                     cy.elements().removeClass('highlighted dimmed');
-                     setSelectedNode(null);
-                 }
-              });
+                  if (evt.target === cy) {
+                      cy.elements().removeClass('highlighted dimmed');
+                      setSelectedNode(null);
+                  }
+               });
+
+               cy.on('zoom pan', () => {
+                  setViewport({
+                    zoom: cy.zoom(),
+                    pan: { ...cy.pan() },
+                    width: cy.width(),
+                    height: cy.height()
+                  });
+               });
     
               cy.on('dragfree', 'node', (evt) => {
                   const node = evt.target;
                   const pos = node.position();
                   updateNodePosition(node.id(), pos.x, pos.y);
+              });
+
+              cy.on('position', 'node', (evt) => {
+                  const node = evt.target;
+                  const pos = node.position();
+                  updateNodePosition(node.id(), pos.x, pos.y);
+              });
+
+              cy.on('layoutstop', () => {
+                  cy.nodes().forEach(node => {
+                      const pos = node.position();
+                      updateNodePosition(node.id(), pos.x, pos.y);
+                  });
               });
               
               cy.on('add', 'edge', (evt) => {

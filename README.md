@@ -1,68 +1,89 @@
-# Knowledge Base Graph
+# 🧠 KNOWLEDGE BASE GRAPHS
+> **Lead Architect:** Priyanshu Verma  
+> **Operational Status:** Live Matix Deployed  
+> **Neural Link:** [knowledge-base-graph-mocha.vercel.app](https://knowledge-base-graph-mocha.vercel.app/)
 
-An interactive, responsive knowledge mapping tool designed for topics and relationships. This project was built as a browser-coded frontend application to demonstrate graph-to-UI data management and persistence.
-
-## 🚀 Key Features
-
-### 1. Interactive Graph Visualization
-- **Graph Library**: Built with `Cytoscape.js` and `Dagre` layout engine. 
-- **Non-Overlapping Layout**: Uses a hierarchical layout (Left-to-Right or Top-to-Bottom) to ensure nodes are readable on initial load.
-- **Node Dragging**: Reposition nodes via drag-and-drop; coordinates persist automatically.
-
-### 2. Full CRUD Support
-- **Node Management**: Add nodes with custom titles and detailed metadata/notes.
-- **Relationship Forging**: A dedicated "Link Forge" interface to establish directed relationships between any two nodes with custom labels.
-- **Inline Editing**: Selected nodes open a Detail Panel (Sidebar) where titles and notes can be edited in real-time.
-- **Full Deletion**: Capability to delete specific nodes (auto-cleaning orphaned edges) or individual edges.
-
-### 3. State & Persistence
-- **LocalStorage Storage**: Full graph state (nodes, edges, positions) survives page refreshes.
-- **Seed Data Integration**: Pre-populated on first load using the research topics provided in the assignment spec (React, Next.js, TypeScript, etc.).
-
-### 4. Advanced UX (Stretch Goals)
-- **High-End UI**: Cyber-inspired dark mode using glassmorphism and Tailwind CSS.
-- **Connectivity Pulse**: Toggle data-flow animations along relationship paths.
-- **Selection Isolation**: Clicking a node highlights its direct neighbors and dims the rest of the network for focus.
-- **Real-time Radar**: A tactical overview widget tracking node distribution in the graph space.
-
-## 🛠️ Tech Stack
-- **Framework**: Next.js 14 (App Router), TypeScript.
-- **Styling**: Tailwind CSS, Framer Motion (Animations).
-- **Store**: Zustand (with Persist middleware).
-- **Core Library**: Cytoscape.js with Dagre layout plugin.
-- **Component Library**: Shadcn UI / Radix Primitives.
-
-## 🏁 Setup & Development
-
-1. **Installation**:
-   ```bash
-   npm install
-   ```
-
-2. **Development Mode**:
-   ```bash
-   npm run dev
-   ```
-
-3. **Build & Optimize**:
-   ```bash
-   npm run build
-   ```
-
-4. **Access**:
-   Open [http://localhost:3000](http://localhost:3000) (or 3001) in your browser.
-
-## 📝 Assignment Verification
-| Feature | Status | Note |
-|---|---|---|
-| Render Nodes & Edges | ✅ PASS | Cytoscape implementation |
-| Relationship Labels | ✅ PASS | Visible on all edges |
-| Layout (No overlap) | ✅ PASS | Hierarchical Dagre layout |
-| Detail Panel (Edit) | ✅ PASS | Inline title/note editing |
-| CRUD Nodes | ✅ PASS | Create/Update/Delete active |
-| CRUD Edges | ✅ PASS | Forge/Delete active |
-| LocalStorage | ✅ PASS | Zustand persistence |
-| Highlight Connected | ✅ PASS | Automatic on node selection |
+## 🌌 Executive Summary
+**Knowledge Base Graphs** is a high-performance, browser-native intelligence mapping platform. Unlike static diagramming tools, it utilizes a real-time graph engine to manage complex relational data, featuring a futuristic "Heads-Up Display" (HUD) powered by glassmorphism and motion-tracked telemetry.
 
 ---
-*Developed as a high-performance frontend assignment demo.*
+
+## 🏗️ System Architecture
+The application logic is built on a "Synchronous Telemetry" pattern where the UI, State, and Graph Engine operate in a continuous feedback loop:
+
+```mermaid
+graph TD
+    User(User Interaction) --> Store[Zustand State Store]
+    Store --> |Reactive Update| UI[Glassmorphism HUD]
+    Store --> |Data Sync| Cy[Cytoscape.js Engine]
+    Cy --> |Positional Feedback| Store
+    Cy --> |Visual Mapping| Radar[Tactical Radar 3.0]
+    Store --> |Persistence| LS[(Local Storage)]
+```
+
+---
+
+## 🚀 Specialized Neural Protocols
+
+### 🛰️ Tactical Radar & Minimap
+An advanced geospatial projection system that maps the entire graph topology onto a 2D radar overlay.
+- **View-Relative Motion**: blips are calculated based on the viewport's current `zoom` and `pan` vectors.
+- **Circular Clipping**: Utilizes polar coordinate normalization to keep distant nodes visible on the radar's edge.
+- **Focus Pulse**: Selected neurons emit a radial shockwave on the radar for immediate spatial orientation.
+
+### 🎨 Chromative Branding Manifold
+A tactical 12-color palette engineered for high contrast in dark-mode environments.
+- **Neon-Glow filters**: Each node color utilizes a specific HSL glow-spread to prevent visual bleeding.
+- **Categorical Forge**: Enable distinct visual lanes for different knowledge domains.
+
+### ⚡ Intelligence Flow & Persistence
+- **Link Forge**: forge directed edges with semantic metadata labels.
+- **Neural Memory**: Every pixel move and color change is automatically cached in real-time, ensuring data survives system reloads.
+- **Reboot Matrix**: A gated "Emergency Purge" protocol that clears the neural cache and re-initializes from baseline seed data.
+
+---
+
+## 🛠️ Technology Perimeter
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Core** | Next.js 14 / TS | Typed React framework for robust scalability. |
+| **Engine** | Cytoscape.js | Industry-standard graph theory visualization. |
+| **Logic** | Zustand | Atomic state management with persistence middleware. |
+| **HUD** | Tailwind / Motion | Hardware-accelerated glassmorphism & animations. |
+| **Signals** | Sonner | Real-time tactical toast notifications. |
+| **Layout** | Dagre | Hierarchical acyclic graph layout engine. |
+
+---
+
+## 🏁 Operational Deployment
+
+### Local Initialization
+```bash
+# Clone the repository and install dependencies
+npm install
+
+# Launch the development matrix
+npm run dev
+```
+
+### Production Matrix
+```bash
+# Compile and optimize for production
+npm run build
+```
+
+---
+
+## 📝 Performance Verification Matrix
+
+| Protocol | Status | Diagnostic Note |
+|---|---|---|
+| **Nodus CRUD** | ✅ PASS | Full Create/Update/Delete operational. |
+| **Edge Forge** | ✅ PASS | Semantic link management verified. |
+| **Spatial Sync** | ✅ PASS | Real-time node coordinate persistence. |
+| **Radar Feed** | ✅ PASS | Responsive zoom/pan telemetry integration. |
+| **HUD Integrity** | ✅ PASS | Glassmorphism & Responsive layout stability. |
+
+---
+*Developed by **Priyanshu Verma** as a demonstration of advanced frontend engineering and interactive graph visualization.*
